@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{#{% if post %}#}
+    <center>
+
+    {% if Search %}
+    <h2>You Searched For {{ Search }}</h2>
+    </center>
+        {% for Post in result %}
+{#          <a href="{% url 'article-detail' object.id %}" >{{ Post.title }}</a>#}
+            <a href="{% url 'article-detail' Post.id %}"
+            >{{ Post.title }}</a> <br>
+               Category:  <a href="{% url 'category' Post.category %}">{{ Post.category }}</a> </a>
+
+            <br>Author: {{  Post.author.first_name }} {{ Post.author.last_name }} <br> Date Posted: {{ Post.post_date }}
+
+        {% endfor %}
+        {% else %}
+        <h1>No results found</h1>
+    {% endif %}
+{#{% for i in post %}#}
+{# <center><h2><a href= "{% url 'home' %} {{ i.slug }}"> {{ i.title }} : {{ i.snipet }} </a> </h2></center>#}
+{#{% endfor %}#}
+{#    {% else %}#}
+{#    <center><h1>Nothing Found</h1></center>#}
+{#{% endif %}#}
+{% endblock %}
+

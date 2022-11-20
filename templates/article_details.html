@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title_tag }}{% endblock %}
+
+{% block content %}
+
+    <h1>{{ post.title }}</h1>
+    <small>By:
+        {{ post.author.first_name }}
+        {{ post.author.last_name }} -
+        {{ post.post_date }}
+
+        {% if user.is_authenticated %}
+            {% if user.id == post.author.id %}
+             - <a href="{% url 'update_post' post.pk %}">[Edit]</a>
+
+         <a href="{% url 'delete_post' post.pk %}">[Delete]<a/>
+            {% endif %}
+        {% endif %}
+     </small><br/>
+    <hr>
+    <br/>
+
+    {% if post.header_image %}
+   <img src="{{ post.header_image.url }}">
+    {% endif %}
+
+    <br/><br/>
+    {{ post.body|safe }}
+
+    <br/><br/>
+    <a href="{% url 'home' %}"class="btn btn-info">Back</a>
+
+    <br/><br/>
+    <hr>
+    <br/>
+    <form action="{% url 'like_post' post.pk %}"
+    method="POST">
+        {% csrf_token %}
+
+    {% if user.is_authenticated %}
+        {% if liked %}
+        <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Unlike</button>
+        {% else %}
+         <button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
+
+        {% endif %}
+    {% else %}
+        <small><a href="{% url 'login' %}">Login</a> to like</small>
+    {% endif %}
+        - {{ total_likes }} Like/s
+    </form>
+
+    <br/><br/>
+
+    <div class="card mb-3" >
+     <div class="row g-0">
+         <div class="col-md-2">
+            {% if post.author.profile.profile_pic %}
+                <img src="{{ post.author.profile.profile_pic.url }}" class="card-img">
+
+            {% else %}
+                <img src="{% static 'bloggerist/images/default.png.jpg' %}" class="card-img">
+            {% endif %}
+        </div>
+         <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">
+                 {{ post.author.first_name }} {{ post.author.last_name }} </h5>
+
+     <p class="small text-muted">
+         <a href="{% url 'show_profile_page' post.author.profile.id %}">Profile Page</a>
+    </p>
+
+          {% if post.author.profile.bio  %}
+        <p class="card-text">{{ post.author.profile.bio }}</p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
